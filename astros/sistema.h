@@ -13,6 +13,7 @@ using namespace std;
 class Astros{
 
 	private:
+		//Usado para calcular o raio
 		double calcularRaio();
 	
 	public:

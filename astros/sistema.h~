@@ -15,32 +15,22 @@ class Astros{
 	private:
 		double calcularRaio();
 	
-	protected:
-
+	public:
+		Astros* astroCentral;
 		int numPCir; 
 		int numDCir;
-
 		double distOrb;
-		double angOrb;	
-	
-
 		double min;
 		double max;
 		double raio;
-		double orbita;
-
-
-	public:
-		int year;
-		int day;
-	  int lum;
-		char* t;
+		double angOrb;
+		double day;
+	    char* t;
 		int qtdSatelites;
 		Astros** satelites;
-		Astros(double aMin, double aMax, int aQtdSatelites, int aOrbita);
-		void setOrbita(int aOrbita);
+		Astros(double aMin, double aMax, int aQtdSatelites, int aOrbita,Astros* aAstroCentral);
 		void render();
-		void criarSatelites();	
+		virtual void criarSatelites() = 0;	
 };
 
 
@@ -48,19 +38,18 @@ class Astros{
 class Lua : public Astros
 {
 	public:
-		Lua(int aOrbita);	
-		void criarSatelites();
+		Lua(int aOrbita,Astros* aAstroCentral);	
+		void criarSatelites();	
+
 };
 
 
 class Planeta : public Astros
 {
-
 	public:
-		Planeta(int aQtdLuas,int aOrbita);
+		Planeta(int aQtdLuas,int aOrbita,Astros* aAstroCentral);
 		void criarSatelites();	
-		
-	
+		void render();	
 };
 
 
@@ -68,10 +57,8 @@ class Planeta : public Astros
 class PlanetaGas : public Astros
 {
 	public:
-		PlanetaGas(int aQtdLuas,int aOrbita);
+		PlanetaGas(int aQtdLuas,int aOrbita,Astros* aAstroCentral);
 		void criarSatelites();
-
-
 	
 };
 
@@ -88,7 +75,7 @@ class Strela : public Astros
 class Sistema
 {
 	protected:
-		Strela *estrela;
+		Strela* estrela;
 
 	public:
 
@@ -96,7 +83,7 @@ class Sistema
 	//public Lua, public Planeta, public PlanetaGas, public Strela
 	Sistema();
 	void setSistema();
-	void getSistema(int year, int day, int lum);
+	void getSistema(double angOrb, double day);
 	void getSistema();
 };
 
