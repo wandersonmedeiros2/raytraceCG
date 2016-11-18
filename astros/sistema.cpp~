@@ -1,0 +1,183 @@
+#include "sistema.h"
+
+Astros::Astros(double aMin, double aMax, int aQtdSatelites, int aOrbita){
+
+	this->numPCir = 20; 
+	this->numDCir = 16;
+	this->distOrb = 0;
+  this->angOrb  = 0;
+
+
+	this->max = aMax;
+	this->min = aMin;
+
+	this->orbita = aOrbita;
+
+	this->qtdSatelites = aQtdSatelites;
+
+	if(this->qtdSatelites > 0)
+		this->satelites = new Astros*[this->qtdSatelites];
+	else
+		this->satelites = NULL;
+		
+	this->raio = calcularRaio();
+
+	this->criarSatelites();
+
+}
+
+Astros::criarSatelites(){
+
+	return;
+
+}
+
+double Astros::calcularRaio(){
+
+	if(min > max){
+		double A;
+		A=this->min;
+		this->min = this->max;
+		this->max=A;
+	}
+	return ( ((double)rand()/(double)(RAND_MAX))*(this->max-this->min) )+this->max;
+
+}
+
+void Astros::setOrbita(int aOrbita){
+
+	this->orbita = aOrbita;
+
+}
+
+
+
+void Astros::render(){
+
+	/*
+	glPushMatrix();
+	glRotatef ((GLfloat) this->year, 0.0, 1.0, 0.0);
+	glTranslatef ((this->raio * 2) * this->orbita, 0.0, 0.0);
+	glRotatef ((GLfloat) this->day, 0.0, 1.0, 0.0);
+	glColor3f (0.0, 1.0, 0.6);//azul
+	glutWireSphere(this->raio,this->numPCir,this->numDCir);
+	*/
+	cout<< "render astro: " << this->t << endl;
+
+	if(this->qtdSatelites > 0){
+		for(int i = 0; i < this->qtdSatelites; i++){
+			this->satelites[i]->render();
+		}
+	}
+
+	//glPopMatrix();
+
+}
+
+
+
+Lua::Lua(int aOrbita) : Astros(0.05,0.10,0,aOrbita) {
+
+	this->t = "Lua";
+	
+}
+
+
+Planeta::Planeta(int aQtdLuas,int aOrbita): Astros(0.05,0.10,aQtdLuas,aOrbita){
+
+	this->t = "Planeta";
+
+}
+
+
+void Planeta::criarSatelites(){
+
+	if(this->qtdSatelites > 0){
+
+		for(int i = 0; i < this->qtdSatelites; i++){
+			this->satelites[i] = new Lua(i + 1);
+		}
+	}
+}
+
+
+PlanetaGas::PlanetaGas(int aQtdLuas,int aOrbita):Astros(0.30,0.50,aQtdLuas,aOrbita){
+
+	this->t = "Planeta gas";
+
+}
+
+void PlanetaGas::criarSatelites(){
+
+	if(this->qtdSatelites > 0){
+
+		for(int i = 0; i < this->qtdSatelites; i++){
+			this->satelites[i] = new Lua(i + 1);
+		}
+	}
+}
+
+Strela::Strela(int aQtdPlanetas) : Astros(0.70,1.20,aQtdPlanetas,0){
+
+	this->t = "Strela";
+
+}
+
+
+void Strela::criarSatelites(){
+
+	//incializa os planetas
+	if(this->qtdSatelites > 0){
+
+   		//glColor3f (0.0, 1.0, 0.6);//azul
+		this->satelites[0] = new Planeta(0,1);
+		this->satelites[1] = new Planeta(1,2);
+		this->satelites[2] = new PlanetaGas(3,3);
+		this->satelites[3] = new PlanetaGas(4,4);
+
+	}
+
+
+}
+
+
+void Strela::render(){
+
+	glColor3f (1.0, 1.0, 0.0);//amarelo
+	glutWireSphere(this->raio,this->numPCir,this->numDCir);
+	cout<< "render astro: " << this->t << endl;
+
+	if(this->qtdSatelites > 0){
+		for(int i = 0; i < this->qtdSatelites; i++)
+			this->satelites[i]->render();
+	}
+
+}
+
+
+Sistema::Sistema(){
+
+}
+
+
+void Sistema::setSistema(){
+
+
+	//inicializar estrelas
+	this->estrela = new Strela(4);
+
+}
+
+
+void Sistema::getSistema(int year, int day, int lum){
+
+	for(int i = 0; i< this->estrela->qtdSatelites;i++)
+	{
+		this->estrela->satelites[i]->year = year;
+		this->estrela->satelites[i]->day  = day;
+		this->estrela->satelites[i]->lum  = lum;
+	}
+	
+	this->estrela->render();
+
+}
