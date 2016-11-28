@@ -13,7 +13,6 @@ using namespace std;
 class Astros{
 
 	private:
-		//Usado para calcular o raio
 		double calcularRaio();
 	
 	public:
@@ -26,7 +25,7 @@ class Astros{
 		double raio;
 		double angOrb;
 		double day;
-	    char* t;
+	  char* t;
 		int qtdSatelites;
 		Astros** satelites;
 		Astros(double aMin, double aMax, int aQtdSatelites, int aOrbita,Astros* aAstroCentral);
